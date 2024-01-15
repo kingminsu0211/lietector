@@ -31,17 +31,22 @@ class Comment(models.Model):
 
 
 class Report(models.Model):
+    #신고 번호
+    report_number = models.CharField(default='', max_length=20, blank=False)
+
+    # 신고 유형 선택 옵션
+    REPORT_TYPE_CHOICES = [
+        ('수사기관 사칭형', '수사기관 사칭형'),
+        ('대출사기형', '대출사기형'),
+    ]
     # 신고 유형
-    report_type = models.CharField(max_length=50)
+    report_type = models.CharField(max_length=50, choices=REPORT_TYPE_CHOICES,)
 
     # 신고 내용
     report_content = models.TextField()
-
     # 신고 일자 (자동으로 현재 일자와 시간이 저장됨)
     report_date = models.DateTimeField(auto_now_add=True)
-
     # # 신고자 정보 (Django의 기본 User 모델과의 외래키 관계)
     reporter = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-
     # 음성피싱 기록 정보 (VoicePhishingRecord 모델과의 외래키 관계)
-    voice_phishing_record = models.ForeignKey(VoicePhishingRecord,default='', on_delete=models.CASCADE)
+    voice_phishing_record = models.ForeignKey(VoicePhishingRecord,default=None, null=True, on_delete=models.CASCADE)
