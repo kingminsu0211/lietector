@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from user.models import CustomUser
-from voicephishing.models import VoicePhishingRecord
+from voicephishing.models import Diagnosis
 from django.conf import settings
 
 
@@ -46,7 +46,7 @@ class Report(models.Model):
     report_content = models.TextField()
     # 신고 일자 (자동으로 현재 일자와 시간이 저장됨)
     report_date = models.DateTimeField(auto_now_add=True)
-    # # 신고자 정보 (Django의 기본 User 모델과의 외래키 관계)
+    # 신고자 정보 (Django의 기본 User 모델과의 외래키 관계)
     reporter = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     # 음성피싱 기록 정보 (VoicePhishingRecord 모델과의 외래키 관계)
-    voice_phishing_record = models.ForeignKey(VoicePhishingRecord,default=None, null=True, on_delete=models.CASCADE)
+    voice_phishing_record = models.ForeignKey(Diagnosis,default=None, null=True, on_delete=models.CASCADE)

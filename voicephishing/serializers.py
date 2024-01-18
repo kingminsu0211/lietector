@@ -1,7 +1,12 @@
 from rest_framework import serializers
-from .models import VoicePhishingRecord
+from .models import Diagnosis
 
-class VoicePhishingRecordSerializer(serializers.ModelSerializer):
+# class VoicePhishingRecordSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = VoicePhishingRecord
+#         fields = '__all__'
+
+class DiagnosisSerializer(serializers.ModelSerializer):
     class Meta:
-        model = VoicePhishingRecord
-        fields = ['diagnosis_type', 'diagnosis_result', 'diagnosis_date']
+        model = Diagnosis
+        fields = '__all__'
