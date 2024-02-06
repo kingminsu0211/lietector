@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-r=8f9(1t+f^xoy+z633*u_#tu+c&k*74w76px1^6)6+0dh2v9g
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -153,7 +153,8 @@ REST_FRAMEWORK = {
     #     # 'rest_framework_simplejwt.authentication.JWTAuthentication',
     #     # 'rest_framework.authentication.TokenAuthentication',
     # ),
-    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema'
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
+'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
 }
 
 if DEBUG:
@@ -169,5 +170,6 @@ if DEBUG:
 
 INTERNAL_IPS = ['127.0.0.1']
 
-# settings.py
 AUTH_USER_MODEL = 'user.CustomUser'
+
+LOGIN_URL = '/login/'

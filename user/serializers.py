@@ -24,7 +24,6 @@ class SignupSerializer(serializers.ModelSerializer):
         required=True,
         validators=[validate_password],  # 비밀번호에 대한 검증
     )
-
     class Meta:
         model = CustomUser
         fields = ('username','password','last_name','first_name','nickname','number')

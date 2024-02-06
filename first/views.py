@@ -6,8 +6,8 @@ from django.http import HttpResponse
 def home(request):
     return HttpResponse("home")
 
-def login(request):
-    return HttpResponse("login")
+# def login(request):
+#     return HttpResponse("login")
 
 # def signup(request):
 #     return HttpResponse("sign up")

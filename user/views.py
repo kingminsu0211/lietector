@@ -5,16 +5,20 @@ from .serializers import *
 from django.contrib.auth.models import User
 from django.contrib.auth import login
 from django.core.exceptions import ValidationError
+from django.http import HttpRequest
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from .models import CustomUser
 from .serializers import SignupSerializer
+from django.contrib.auth import authenticate, logout, login as auth_login
+from django.contrib.auth.decorators import login_required
 
 class CheckAccountViewset(viewsets.ModelViewSet):
     queryset = CustomUser.objects.all()
     serializer_class = AccountsSerializer
 
+#회원가입
 @api_view(['POST'])
 def signup(request):
     serializer = SignupSerializer(data=request.data)
@@ -26,16 +30,6 @@ def signup(request):
         first_name=serializer.validated_data['first_name']
         nickname = serializer.validated_data['nickname']
         number = serializer.validated_data['number']
-
-        # Check if the username is unique
-        # if CustomUser.objects.filter(username=username).exists():
-        #     return Response({'error': '이미 존재하는 id입니다.'}, status=status.HTTP_400_BAD_REQUEST)
-        # Check if the nickname is unique
-        # if CustomUser.objects.filter(nickname__iexact=nickname).exists():
-        #     return Response({'error': '이미 존재하는 nickname입니다.'}, status=status.HTTP_400_BAD_REQUEST)
-        # Check if the number is unique
-        # if CustomUser.objects.filter(number=number).exists():
-        #     return Response({'error': '이미 존재하는 전화번호입니다.'}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
             # Create a new user
@@ -49,3 +43,34 @@ def signup(request):
         return Response({'message': '회원가입이 완료되었습니다.'}, status=status.HTTP_201_CREATED)
 
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])
+def user_login(request):
+    username = request.data.get('username')
+    password = request.data.get('password')
+
+    try:
+        user = authenticate(request._request, username=username, password=password)
+        if user is not None:
+            auth_login(request._request, user)
+            return Response({'message': '로그인 성공'}, status=status.HTTP_200_OK)
+        else:
+            return Response({'error': '아이디 또는 비밀번호가 잘못되었습니다.'}, status=status.HTTP_401_UNAUTHORIZED)
+
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@api_view(['POST'])
+def user_logout(request):
+    logout(request._request)  # request._request 사용
+    return Response({'message': '로그아웃 성공'}, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+@login_required  # 로그인이 필요한 경우에만 접근 가능하도록 하는 데코레이터
+def current_user(request):
+    if request.user.is_authenticated:
+        user = request.user
+        return Response({'username': user.username, 'email': user.email}, status=status.HTTP_200_OK)
+    else:
+        return Response({'message': '로그인이 필요합니다.'}, status=status.HTTP_401_UNAUTHORIZED)
