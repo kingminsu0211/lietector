@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'voicephishing',
     'community',
+    'drf_yasg',
 
 ]
 

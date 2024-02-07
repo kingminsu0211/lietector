@@ -7,7 +7,6 @@ router = routers.DefaultRouter()
 
 urlpatterns = [
     path('user/', include('user.urls')),
-    path('community/', include('community.urls')),
     path('diagnosis/', DiagnosisListView.as_view(), name='diagnosis-list'),
     path('voice/', diagnose_voice),
 

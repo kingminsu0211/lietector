@@ -10,6 +10,8 @@ from django.utils import timezone
 from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView
 from rest_framework import filters
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 
 
 def is_admin(user):
@@ -18,17 +20,32 @@ def is_admin(user):
 #내가 쓴 게시글
 class MyPostListView(generics.ListAPIView):
     serializer_class = PostSerializer
+
+    @swagger_auto_schema(operation_description="내가 쓴 게시글 목록을 가져옵니다.")
     def get_queryset(self):
         return Post.objects.filter(writer=self.request.user)
 
 # 전체 게시글
 class AllPostListView(generics.ListAPIView):
     serializer_class = PostSerializer
+
+    @swagger_auto_schema(operation_description="전체 게시글 목록을 가져옵니다.")
     def get_queryset(self):
         return Post.objects.all()
 
 #게시글 자세히 보기
 class PostDetailView(APIView):
+    @swagger_auto_schema(
+        operation_description="특정 게시글을 자세히 보여줍니다.",
+        manual_parameters=[
+            openapi.Parameter(
+                'post_id',
+                openapi.IN_PATH,
+                description="게시글 ID",
+                type=openapi.TYPE_INTEGER,
+            )
+        ],
+    )
     def get(self, request, post_id):
         try:
             post = Post.objects.get(id=post_id)
@@ -39,6 +56,11 @@ class PostDetailView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 #게시글 쓰기
+@swagger_auto_schema(
+    method='post',
+    request_body=PostSerializer,
+    operation_description="게시글 쓰기"
+)
 @api_view(['POST'])
 # @login_required
 def create_post(request):
@@ -61,6 +83,11 @@ def create_post(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # 게시글 수정
+@swagger_auto_schema(
+    method='put',
+    request_body=PostSerializer,
+    operation_description="게시글 수정"
+)
 @api_view(['PUT'])
 def update_post(request, post_id):
     post = get_object_or_404(Post, id=post_id)
@@ -77,6 +104,11 @@ def update_post(request, post_id):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 #댓글 쓰기
+@swagger_auto_schema(
+    method='post',
+    request_body=CommentSerializer,
+    operation_description="댓글 쓰기"
+)
 @api_view(['POST'])
 def comment_write(request, post_id):
     post = get_object_or_404(Post, id=post_id)
@@ -104,6 +136,11 @@ def comment_write(request, post_id):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 #댓글 수정
+@swagger_auto_schema(
+    method='put',
+    request_body=CommentSerializer,
+    operation_description="댓글 수정"
+)
 @api_view(['PUT'])
 def comment_update(request, comment_id):
     comment = get_object_or_404(Comment, id=comment_id)
@@ -120,10 +157,17 @@ def comment_update(request, comment_id):
 # 모든 신고 리스트
 class AllReportListView(generics.ListAPIView):
     serializer_class = ReportSerializer
+
+    @swagger_auto_schema(operation_description="모든 신고 리스트를 가져옵니다.")
     def get_queryset(self):
         return Report.objects.all()
 
 #신고하기
+@swagger_auto_schema(
+    method='post',
+    request_body=ReportSerializer,
+    operation_description="신고하기"
+)
 @api_view(['POST'])
 def report(request):
     serializer = ReportSerializer(data=request.data)
@@ -152,6 +196,11 @@ def report(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 #신고 수정
+@swagger_auto_schema(
+    method='put',
+    request_body=ReportSerializer,
+    operation_description="신고 수정"
+)
 @api_view(['PUT'])
 def report_update(request, report_id):
     report = get_object_or_404(Report, id=report_id)
@@ -167,6 +216,7 @@ def report_update(request, report_id):
 class MyReportListView(generics.ListAPIView):
     serializer_class = ReportSerializer
 
+    @swagger_auto_schema(operation_description="내 신고내역을 가져옵니다.")
     def get_queryset(self):
         # 현재 날짜
         current_date = timezone.now()
@@ -189,6 +239,11 @@ class ReportDetailView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 #문의하기 작성
+@swagger_auto_schema(
+    method='post',
+    request_body=AskSerializer,
+    operation_description="문의하기 작성"
+)
 @api_view(['POST'])
 def create_ask(request):
     serializer = AskSerializer(data=request.data)
@@ -212,6 +267,11 @@ def create_ask(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # 문의사항 수정
+@swagger_auto_schema(
+    method='put',
+    request_body=AskSerializer,
+    operation_description="문의사항 수정"
+)
 @api_view(['PUT'])
 def update_ask(request, post_id):
     ask = get_object_or_404(Ask, id=post_id)
@@ -233,6 +293,11 @@ def update_ask(request, post_id):
 
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+@swagger_auto_schema(
+    method='post',
+    request_body=AskCommentSerializer,
+    operation_description="문의사항 답변"
+)
 @api_view(['POST'])
 def ask_comment_write(request, post_id):
     serializer = AskCommentSerializer(data=request.data)
