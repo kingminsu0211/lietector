@@ -6,18 +6,25 @@ from django.contrib.auth.models import User
 from django.contrib.auth import login
 from django.core.exceptions import ValidationError
 from django.http import HttpRequest
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import status
 from .models import CustomUser
 from .serializers import SignupSerializer
 from django.contrib.auth import authenticate, logout, login as auth_login
 from django.contrib.auth.decorators import login_required
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
+from rest_framework.permissions import AllowAny
 
 class CheckAccountViewset(viewsets.ModelViewSet):
     queryset = CustomUser.objects.all()
     serializer_class = AccountsSerializer
 
+# 회원가입 API 문서화
+@swagger_auto_schema(method='post', request_body=SignupSerializer)
+@api_view(['POST'])
+@permission_classes([AllowAny])
 #회원가입
 @api_view(['POST'])
 def signup(request):
@@ -44,7 +51,12 @@ def signup(request):
 
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
+# 로그인 API 문서화
+@swagger_auto_schema(method='get', manual_parameters=[
+    openapi.Parameter('username', openapi.IN_QUERY, description="사용자 ID", type=openapi.TYPE_STRING),
+    openapi.Parameter('password', openapi.IN_QUERY, description="비밀번호", type=openapi.TYPE_STRING),
+])
+@permission_classes([AllowAny])
 @api_view(['GET'])
 def user_login(request):
     username = request.data.get('username')
@@ -61,11 +73,15 @@ def user_login(request):
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+@swagger_auto_schema(method='post')
 @api_view(['POST'])
 def user_logout(request):
     logout(request._request)  # request._request 사용
     return Response({'message': '로그아웃 성공'}, status=status.HTTP_200_OK)
 
+
+# 현재 사용자 정보 API 문서화
+@swagger_auto_schema(method='get')
 @api_view(['GET'])
 @login_required  # 로그인이 필요한 경우에만 접근 가능하도록 하는 데코레이터
 def current_user(request):
