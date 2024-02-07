@@ -12,8 +12,8 @@ urlpatterns = [
     path('posts/', create_post, name='create_post'),
     path('posts/update/<int:post_id>/', update_post, name='update_post'),
     #댓글
-    path('post/<int:post_id>/comment/', comment_write, name='comment-write'),
-    path('post/comment/update/<int:comment_id>/', comment_update, name='comment_update'),
+    path('posts/<int:post_id>/comment/', comment_write, name='comment-write'),
+    path('posts/comment/update/<int:comment_id>/', comment_update, name='comment_update'),
     #신고하기
     path('reports/', report, name='reports'),
     path('reports/<int:report_id>/', ReportDetailView.as_view(), name='report-detail'),
