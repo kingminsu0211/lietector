@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'rest_auth',
     'first',
     'user',
-    # 'debug_toolbar',
+    'debug_toolbar',
     'voicephishing',
     'community',
 
@@ -157,18 +157,18 @@ REST_FRAMEWORK = {
 'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
 }
 
-# if DEBUG:
-#     # 기존의 middleware 리스트에 추가
-#     MIDDLEWARE += [
-#         'debug_toolbar.middleware.DebugToolbarMiddleware',
-#     ]
-#
-#     # Debug Toolbar 설정
-#     DEBUG_TOOLBAR_CONFIG = {
-#         'SHOW_TOOLBAR_CALLBACK': lambda request: True,
-#     }
+if DEBUG:
+    # 기존의 middleware 리스트에 추가
+    MIDDLEWARE += [
+        'debug_toolbar.middleware.DebugToolbarMiddleware',
+    ]
 
-# INTERNAL_IPS = ['127.0.0.1']
+    # Debug Toolbar 설정
+    DEBUG_TOOLBAR_CONFIG = {
+        'SHOW_TOOLBAR_CALLBACK': lambda request: True,
+    }
+
+INTERNAL_IPS = ['127.0.0.1']
 
 AUTH_USER_MODEL = 'user.CustomUser'
 
