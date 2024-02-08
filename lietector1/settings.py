@@ -139,6 +139,10 @@ USE_TZ = True
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
+SWAGGER_SETTINGS = {
+    'DEFAULT_INFO': 'lietector.urls.swagger_info',  # Swagger 정보 설정
+}
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
