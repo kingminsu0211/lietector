@@ -40,25 +40,23 @@ schema_view = get_schema_view(
 )
 
 
-urlpatterns = ([
+urlpatterns = [
     path('', include('first.urls')),
     path('', include('user.urls')),
     path('', include('voicephishing.urls')),
     path('', include('community.urls')),
     path('admin/', admin.site.urls),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
-    # path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
-    # path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
-    ]
-        # + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-   )
+    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
+    ]        + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 
 if settings.DEBUG:
     import debug_toolbar
     urlpatterns += [
         re_path(r'^__debug__/', include(debug_toolbar.urls)),
-        static(settings.STATIC_URL, document_root=settings.STATIC_ROOT),
+        # static(settings.STATIC_URL, document_root=settings.STATIC_ROOT),
         re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
         re_path(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
         re_path(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),

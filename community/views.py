@@ -17,6 +17,19 @@ from drf_yasg import openapi
 def is_admin(user):
     return user.is_staff and user.is_superuser
 
+# 게시물 검색
+@swagger_auto_schema(
+    operation_description="게시글 검색"
+)
+class PostSearchAPIView(ListAPIView):
+    serializer_class = PostSerializer
+    def get_queryset(self):
+        queryset = Post.objects.all()
+        search_query = self.request.query_params.get('q', None)
+        if search_query:
+            queryset = queryset.filter(title__icontains=search_query)
+        return queryset
+
 #내가 쓴 게시글
 class MyPostListView(generics.ListAPIView):
     serializer_class = PostSerializer

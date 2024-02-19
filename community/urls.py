@@ -6,6 +6,7 @@ router = routers.DefaultRouter()
 
 urlpatterns = [
     #게시글
+    path('posts/search/', PostSearchAPIView.as_view(), name='post-search'),
     path('posts/mylist/', MyPostListView.as_view(), name='mypost_list'),
     path('posts/alllist/', AllPostListView.as_view(), name='allpost_list'),
     path('posts/<int:post_id>/', PostDetailView.as_view(), name='post-detail'),
