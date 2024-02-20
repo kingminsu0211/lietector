@@ -116,6 +116,21 @@ def update_post(request, post_id):
 
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+#댓글 목록
+class AllCommentListView(generics.ListAPIView):
+    serializer_class = CommentSerializer
+
+    @swagger_auto_schema(operation_description="전체 댓글 목록")
+    def get_queryset(self):
+        return Comment.objects.all()
+
+class MyCommentListView(generics.ListAPIView):
+    serializer_class = CommentSerializer
+
+    @swagger_auto_schema(operation_description="내가 쓴 댓글 목록")
+    def get_queryset(self):
+        return Comment.objects.filter(user=self.request.user)
+
 #댓글 쓰기
 @swagger_auto_schema(
     method='post',
