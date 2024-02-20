@@ -23,6 +23,7 @@ urlpatterns = [
     path('reports/update/<int:report_id>/', report_update, name='report_update'),
     path('reports/myreport/', MyReportListView.as_view(), name='myreport_list'),
     path('reports/allreport/', AllReportListView.as_view(), name='allreport_list'),
+    path('reports/search/', NumberSearchAPIView.as_view(), name='search-number'),
     #문의하기
     path('ask/', create_ask, name='create_ask'),
     path('ask/update/<int:post_id>/', update_ask, name='update_ask'),

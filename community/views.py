@@ -182,6 +182,19 @@ def comment_update(request, comment_id):
 
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+# 번호 검색
+@swagger_auto_schema(
+    operation_description="번호 검색"
+)
+class NumberSearchAPIView(ListAPIView):
+    serializer_class = ReportSerializer
+    def get_queryset(self):
+        queryset = Report.objects.all()
+        search_query = self.request.query_params.get('q', None)
+        if search_query:
+            queryset = queryset.filter(report_number__icontains=search_query)
+        return queryset
+
 # 모든 신고 리스트
 class AllReportListView(generics.ListAPIView):
     serializer_class = ReportSerializer
