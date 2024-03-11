@@ -28,5 +28,7 @@ urlpatterns = [
     path('ask/', create_ask, name='create_ask'),
     path('ask/update/<int:post_id>/', update_ask, name='update_ask'),
     path('ask/<int:post_id>/comment/', ask_comment_write, name='ask_comment'),
+    path('ask/allask/', AllAskListView.as_view(), name='all_ask_list'),
+    path('ask/myask/', MyAskListView.as_view(), name='my_ask_list'),
     # 다른 URL 패턴들을 필요에 따라 추가
 ]

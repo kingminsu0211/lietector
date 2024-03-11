@@ -365,3 +365,19 @@ def ask_comment_write(request, post_id):
             return Response({'error': '관리자만 답변을 작성할 수 있습니다.'}, status=status.HTTP_403_FORBIDDEN)
 
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# 내 문의 리스트
+class MyAskListView(generics.ListAPIView):
+    serializer_class = AskSerializer
+
+    @swagger_auto_schema(operation_description="내가 쓴 문의하기 목록을 가져옵니다.")
+    def get_queryset(self):
+        return Ask.objects.filter(writer=self.request.user)
+
+# 전체 문의 리스트
+class AllAskListView(generics.ListAPIView):
+    serializer_class = AskSerializer
+
+    @swagger_auto_schema(operation_description="전체 문의하기 목록을 가져옵니다.")
+    def get_queryset(self):
+        return Ask.objects.all()
