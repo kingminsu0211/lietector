@@ -5,6 +5,7 @@ from .serializers import *
 from django.contrib.auth.models import User
 from django.contrib.auth import login
 from django.core.exceptions import ValidationError
+from rest_framework.views import APIView
 from django.http import HttpRequest
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
@@ -16,6 +17,8 @@ from django.contrib.auth.decorators import login_required
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 from rest_framework.permissions import AllowAny
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authtoken.models import Token
 
 class CheckAccountViewset(viewsets.ModelViewSet):
     queryset = CustomUser.objects.all()
@@ -23,11 +26,12 @@ class CheckAccountViewset(viewsets.ModelViewSet):
 
 # 회원가입 API 문서화
 @swagger_auto_schema(method='post', request_body=SignupSerializer)
-@api_view(['POST'])
+# @api_view(['POST'])
 @permission_classes([AllowAny])
+# @permission_classes([IsAuthenticated])
 #회원가입
 @api_view(['POST'])
-def signup(request):
+def signup(request: HttpRequest):
     serializer = SignupSerializer(data=request.data)
     print("Request Data:", request.data)
     if serializer.is_valid():
@@ -45,7 +49,7 @@ def signup(request):
             return Response({'error': e.message}, status=status.HTTP_400_BAD_REQUEST)
 
         # Log in the user
-        login(request, user)
+        # login(request, user)
 
         return Response({'message': '회원가입이 완료되었습니다.'}, status=status.HTTP_201_CREATED)
 

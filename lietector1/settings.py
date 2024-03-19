@@ -91,8 +91,8 @@ DATABASES = {
         'NAME': 'capstone',
         'USER' : 'root',
         'PASSWORD' : '1234',
-        # 'HOST' : 'ec2-54-180-213-170.ap-northeast-2.compute.amazonaws.com',
-        'HOST' : '127.0.0.1',
+        'HOST' : 'ec2-54-180-213-170.ap-northeast-2.compute.amazonaws.com',
+        # 'HOST' : '127.0.0.1',
         'PORT' : '3306'
     }
 }
